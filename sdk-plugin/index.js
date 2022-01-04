@@ -1,5 +1,6 @@
 import * as contentstack from "contentstack";
 import * as Utils from "@contentstack/utils";
+import ContentstackLivePreview from "@contentstack/live-preview-utils";
 
 const Stack = contentstack.Stack({
   api_key: process.env.CONTENTSTACK_API_KEY,
