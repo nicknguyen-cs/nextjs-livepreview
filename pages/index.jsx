@@ -1,7 +1,8 @@
 import React from "react";
-import Stack from "../sdk-plugin/index";
+import StackUtils from "../sdk-plugin/index";
 import Layout from "../components/layout";
 import RenderComponents from "../components/render-components";
+import { addEditableTags } from "@contentstack/utils"
 
 export default function Home(props) {
   const { header, footer, result } = props;
@@ -9,10 +10,10 @@ export default function Home(props) {
     <Layout header={header} footer={footer} page={result}>
       {result.page_components && (
         <RenderComponents
-          pageComponents={result.page_components}
+          pageComponents={result?.page_components}
           contentTypeUid="page"
-          entryUid={result.uid}
-          locale={result.locale}
+          entryUid={result?.uid}
+          locale={result?.locale}
         />
       )}
     </Layout>
@@ -20,8 +21,11 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps(context) {
+  if (context.query) {
+    StackUtils.Stack.livePreviewQuery(context.query);
+  }
   try {
-    const result = await Stack.getEntryByUrl({
+    const result = await StackUtils.getEntryByUrl({
       contentTypeUid: "page",
       entryUrl: context.resolvedUrl,
       referenceFieldPath: [
@@ -32,15 +36,19 @@ export async function getServerSideProps(context) {
         "page_components.section_with_buckets.buckets.description",
       ],
     });
-    const header = await Stack.getEntry({
+    const header = await StackUtils.getEntry({
       contentTypeUid: "header",
       referenceFieldPath: ["navigation_menu.page_reference"],
       jsonRtePath: ["notification_bar.announcement_text"],
     });
-    const footer = await Stack.getEntry({
+    const footer = await StackUtils.getEntry({
       contentTypeUid: "footer",
       jsonRtePath: ["copyright"],
     });
+    addEditableTags(result[0], "page", true);
+    addEditableTags(header[0][0], "header", true);
+    addEditableTags(footer[0][0], "footer", true);
+    console.log(result[0]);
     return {
       props: {
         header: header[0][0],

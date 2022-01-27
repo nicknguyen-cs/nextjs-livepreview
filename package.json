@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@contentstack/live-preview-utils": "^1.0.1",
-    "contentstack": "^3.13.3",
+    "contentstack": "^3.15.0",
     "html-react-parser": "^1.4.0",
     "json-viewer-js": "^1.0.7",
     "moment": "^2.29.1",

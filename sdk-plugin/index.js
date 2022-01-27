@@ -1,34 +1,21 @@
-import * as contentstack from "contentstack";
+import Contentstack from "contentstack";
 import * as Utils from "@contentstack/utils";
-import ContentstackLivePreview from "@contentstack/live-preview-utils";
 
-const Stack = contentstack.Stack({
-  api_key: process.env.CONTENTSTACK_API_KEY,
-  delivery_token: process.env.CONTENTSTACK_DELIVERY_TOKEN,
-  environment: process.env.CONTENTSTACK_ENVIRONMENT,
-  region: process.env.CONTENTSTACK_REGION ? process.env.CONTENTSTACK_REGION : "us",
-  live_preview: {
-    management_token: 'cs6cd1494c3f686839b8e1c403',
-    enable: true, 
-    host: 'api.contentstack.io',
-    stackDetails: {
-      apiKey: process.env.CONTENTSTACK_API_KEY,
-    },
-    clientUrlParams: {
-      protocol: "https",
-      host: "app.contentstack.com",
-      port: 443,
-    },
+
+const Stack = Contentstack.Stack(
+  {
+    api_key: process.env.CONTENTSTACK_API_KEY,
+    delivery_token: process.env.CONTENTSTACK_DELIVERY_TOKEN,
+    environment: process.env.CONTENTSTACK_ENVIRONMENT,
+    live_preview: {
+      management_token: process.env.CONTENTSTACK_MANAGEMENT_TOKEN,
+      enable: true,
+      host: 'api.contentstack.io',
+      ssr: true,
+    }
   }
-});
+)
 Stack.setHost('api.contentstack.io');
-
-
-if (process.env.CONTENTSTACK_CUSTOM_HOST) {
-  Stack.setHost(process.env.CONTENTSTACK_CUSTOM_HOST);
-}
-
-ContentstackLivePreview.init(Stack);
 
 const renderOption = {
   ["span"]: (node, next) => {
@@ -37,6 +24,7 @@ const renderOption = {
 };
 
 export default {
+  Stack,
   /**
    *
    * fetches all the entries from specific content-type
