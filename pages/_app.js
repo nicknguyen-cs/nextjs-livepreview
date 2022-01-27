@@ -12,6 +12,9 @@ Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
+/**
+ * You can initialize live preview at the highest parent component so it distributes down to the entire application. 
+ */
 ContentstackLivePreview.init({enable: true,ssr: true, debug: true, stackDetails: {
   apiKey: 'blt19354e73f1681431'
 }});

@@ -21,6 +21,9 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps(context) {
+  /**
+   * context.query will/should return the hash value that is sent from the UI to the code base.
+   */
   if (context.query) {
     StackUtils.Stack.livePreviewQuery(context.query);
   }
@@ -45,10 +48,14 @@ export async function getServerSideProps(context) {
       contentTypeUid: "footer",
       jsonRtePath: ["copyright"],
     });
-    addEditableTags(result[0], "page", true);
+    /**
+     * addEditableTags will inject the 'data-cslp' attribute tag into the JSON payload. From there you will need to add these as attribute tags in 
+     * the DOM elements. This will link the entry field to the dom field for quick referencing with the edit buttons. 
+     * i.e -  '$' : { 'data-cslp' : '{content-type-uid.entry-uid.locale.path.to.field} }
+     */
+    addEditableTags(result[0], "page", true); 
     addEditableTags(header[0][0], "header", true);
     addEditableTags(footer[0][0], "footer", true);
-    console.log(result[0]);
     return {
       props: {
         header: header[0][0],

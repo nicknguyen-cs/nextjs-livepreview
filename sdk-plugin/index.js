@@ -15,6 +15,9 @@ const Stack = Contentstack.Stack(
     }
   }
 )
+/**
+ * Make sure to setHost after the initial SDK is started. This is a must.
+ */
 Stack.setHost('api.contentstack.io');
 
 const renderOption = {
