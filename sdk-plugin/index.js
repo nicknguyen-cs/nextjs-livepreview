@@ -70,20 +70,32 @@ export default {
    * @param {* Json RTE path} jsonRtePath
    * @returns
    */
-  getEntryByUrl({ contentTypeUid, entryUrl, referenceFieldPath, jsonRtePath }) {
+  getEntryByUrl({ contentTypeUid, entryUrl, referenceFieldPath, jsonRtePath, variation }) {
     return new Promise((resolve, reject) => {
       const blogQuery = Stack.ContentType(contentTypeUid).Query();
       if (referenceFieldPath) blogQuery.includeReference(referenceFieldPath);
       blogQuery.includeOwner().toJSON();
-      const data = blogQuery.where("url", `${entryUrl}`).find();
-      data.then(
-        (result) => {
+      let data = {};
+      if (variation) {
+        console.log("Personalized: ", variation);
+        let q1= Stack.ContentType(contentTypeUid).Query().where("url", `${entryUrl}`);
+        let q2= Stack.ContentType(contentTypeUid).Query().where("personalization", `${variation}`);
+        data = blogQuery.and(q1,q2).find();
+      }
+      else {
+        console.log("Non-personalized");
+        data = blogQuery.where("url", `${entryUrl}`).find();
+      }
+     
+      data.then((result) => {
+        console.log("RESULT!!!", result);
           jsonRtePath &&
             Utils.jsonToHTML({
               entry: result,
               paths: jsonRtePath,
               renderOption,
             });
+            console.log(result);
           resolve(result[0]);
         },
         (error) => {
