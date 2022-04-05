@@ -1,6 +1,6 @@
 import Contentstack from "contentstack";
 import * as Utils from "@contentstack/utils";
-
+import { htmlToJson, jsonToHtml } from "@contentstack/json-rte-serializer"
 
 const Stack = Contentstack.Stack(
   {
@@ -77,27 +77,22 @@ export default {
       blogQuery.includeOwner().toJSON();
       let data = {};
       if (variation) {
-        console.log("Personalized: ", variation);
-        let q1= Stack.ContentType(contentTypeUid).Query().where("url", `${entryUrl}`);
-        let q2= Stack.ContentType(contentTypeUid).Query().where("personalization", `${variation}`);
-        data = blogQuery.and(q1,q2).find();
+        let q1 = Stack.ContentType(contentTypeUid).Query().where("url", `${entryUrl}`);
+        let q2 = Stack.ContentType(contentTypeUid).Query().where("personalization", `${variation}`);
+        data = blogQuery.and(q1, q2).find();
       }
       else {
-        console.log("Non-personalized");
         data = blogQuery.where("url", `${entryUrl}`).find();
       }
-     
+
       data.then((result) => {
-        console.log("RESULT!!!", result);
-          jsonRtePath &&
-            Utils.jsonToHTML({
-              entry: result,
-              paths: jsonRtePath,
-              renderOption,
-            });
-            console.log(result);
-          resolve(result[0]);
-        },
+        jsonRtePath &&
+          Utils.jsonToHTML({
+            entry: result,
+            paths: jsonRtePath
+          });
+        resolve(result[0]);
+      },
         (error) => {
           reject(error);
         }

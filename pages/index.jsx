@@ -24,10 +24,10 @@ export async function getServerSideProps(context) {
   /**
    * context.query will/should return the hash value that is sent from the UI to the code base.
    */
+
   let option = ["A","B","C"]
   let rand = Math.floor(Math.random() * 3);
   if (context.query) {
-    console.log(context.query);
     StackUtils.Stack.livePreviewQuery(context.query);
   }
   try {
